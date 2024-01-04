@@ -39,72 +39,87 @@
 
 // Your code goes here...
 
-const container = document.querySelectorAll('.cardsContainer');
-const cards = document.querySelectorAll('.card');
+//localStorage.clear();
+
+let cards = document.querySelectorAll('.card');
 let setNums = 'setNums';
 let setNumsR = 'setNumsR';
 let string1 = '';
 let string2 = '';
-
 let testStorage = localStorage.getItem(setNums);
 let testStorageR = localStorage.getItem(setNumsR);
-
 function getId(card) {
   string1 += `${card.id},`;
   localStorage.setItem(setNums, string1);
-}
-    
+  console.log(`Added id ${card.id} to string1. string1 is now ${string1}`);
+}   
 function removeId(card) {
   string2 += `${card.id},`;
   localStorage.setItem(setNumsR, string2);
+  console.log(`Added id ${card.id} to string2. string1 is now ${string2}`);
 }
+if (testStorage === null || testStorageR === null) {
+  for (let card of cards) {
+    if (Array.from(card.classList).includes('red')) {
+      console.log()
+      getId(card);
+    }
+    else if (card.classList !== 'red') {
+      removeId(card);
+    }
+    string2 = '';
+    string2.length === 0;
+    card.addEventListener('click', function () {
+      if (Array.from(this.classList).includes('red')) {
+        this.classList.remove('red');
+        removeId(this);
+      } else
+        if (this.classList !== 'red') {
+          this.classList.add('red');
+          getId(this);
+        }
+    })
+  }
+} else {
+  let splitR = testStorageR.split(',');
+  let split1 = testStorage.split(',');
 
-let splitR = testStorageR.split(',');
-let split1 = testStorage.split(',');
-
-console.log(split1);
-console.log(testStorageR);
-
-function removeRed(i) {
-  for (let set2 of splitR) {
-    if (set2 === cards[i].id) {
-      if (Array.from(cards[i].classList).includes('red')) {
+  function removeRed(i) {
+    if (splitR.includes(cards[i].id)) {
+      if (cards[i].classList.contains('red')) {
         cards[i].classList.remove('red');
+        console.log(`removed red from ${cards[i].id}`);
       }
     }
   }
-}
-
-for (let set of split1) {
-  for (let i = 0; i < cards.length; i++) {
-    if (set === cards[i].id) {
-      if (cards[i].classList !== 'red') {
-        cards[i].classList.add('red');
+  for (let set of split1) {
+    for (let i = 0; i < cards.length; i++) {
+      if (set === cards[i].id) {
+        if (!cards[i].classList.contains('red')) {
+          cards[i].classList.add('red');
+        } 
+        } else {
         removeRed(i);
-      } else { };
-    }   
+      } 
+    }  
   }
-}
-
-for (let card of cards) { 
-  if (Array.from(card.classList).includes('red')) {
-    getId(card);
-   } 
-  else if (card.classList !== 'red') {
-    removeId(card);
-  }
-  string2 = '';
-  string2.length === 0;
-  card.addEventListener('click', function () {
-    if (Array.from(this.classList).includes('red')) {
-      this.classList.remove('red');
-      removeId(this);
-    } else
-      if (this.classList !== 'red') {
+  for (let card of cards) {
+    if (Array.from(card.classList).includes('red')) {
+      getId(card);
+    }
+    else if (!Array.from(card.classList).includes('red')) {
+      removeId(card);
+    }
+    string2 = '';
+    card.addEventListener('click', function () {
+      if (this.classList.contains('red')) {
+        this.classList.remove('red');
+        removeId(this);
+      } else if (!this.classList.contains('red')) {
         this.classList.add('red');
         getId(this);
-      } 
-  }) 
-  
+      }
+    })
+  }
 }
-
+FileSystemDirectoryEntry;jnerg
