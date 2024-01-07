@@ -39,87 +39,78 @@
 
 // Your code goes here...
 
-//localStorage.clear();
-
 let cards = document.querySelectorAll('.card');
-let setNums = 'setNums';
-let setNumsR = 'setNumsR';
-let string1 = '';
-let string2 = '';
-let testStorage = localStorage.getItem(setNums);
-let testStorageR = localStorage.getItem(setNumsR);
-function getId(card) {
-  string1 += `${card.id},`;
-  localStorage.setItem(setNums, string1);
-  console.log(`Added id ${card.id} to string1. string1 is now ${string1}`);
+let data = document.querySelectorAll('data-fav');
+let string = [];
+
+const favStorage = localStorage.getItem('fav');
+
+function getId(card, stat) {
+  if (stat === 'true') {
+    card.classList.add('red');
+    string.push(`${card.id}`);
+  } else 
+    if (stat === 'false') {
+      let index = string.indexOf(card.id);
+      if (index > -1) {
+        string.splice(index, 1);
+      }
+      
+    }
+  let string1 = string.toString();
+  localStorage.setItem('fav', string1);
+  console.log(`id ${card.id}. string1 is now ${string1}`);
 }   
-function removeId(card) {
-  string2 += `${card.id},`;
-  localStorage.setItem(setNumsR, string2);
-  console.log(`Added id ${card.id} to string2. string1 is now ${string2}`);
-}
-if (testStorage === null || testStorageR === null) {
+
+if (favStorage === null) {
+  
   for (let card of cards) {
-    if (Array.from(card.classList).includes('red')) {
-      console.log()
-      getId(card);
-    }
-    else if (card.classList !== 'red') {
-      removeId(card);
-    }
-    string2 = '';
-    string2.length === 0;
     card.addEventListener('click', function () {
-      if (Array.from(this.classList).includes('red')) {
-        this.classList.remove('red');
-        removeId(this);
+      if (this.dataset.fav === 'false') {
+        this.setAttribute('data-fav', 'true');
+        this.classList.add('red');
+        getId(this, 'true');
       } else
-        if (this.classList !== 'red') {
-          this.classList.add('red');
-          getId(this);
+        if (this.dataset.fav === 'true') {
+          this.setAttribute('data-fav', 'false');
+          this.classList.remove('red');
+          getId(this, 'false');
         }
     })
-  }
+     
+  } 
+  
 } else {
-  let splitR = testStorageR.split(',');
-  let split1 = testStorage.split(',');
-
-  function removeRed(i) {
-    if (splitR.includes(cards[i].id)) {
-      if (cards[i].classList.contains('red')) {
-        cards[i].classList.remove('red');
-        console.log(`removed red from ${cards[i].id}`);
-      }
-    }
-  }
-  for (let set of split1) {
-    for (let i = 0; i < cards.length; i++) {
-      if (set === cards[i].id) {
-        if (!cards[i].classList.contains('red')) {
-          cards[i].classList.add('red');
-        } 
-        } else {
-        removeRed(i);
-      } 
-    }  
-  }
+ 
+  let favSplit = favStorage.split(',');
+  
   for (let card of cards) {
-    if (Array.from(card.classList).includes('red')) {
-      getId(card);
+   for (let set of favSplit) {
+      if (set === card.id) {
+        card.setAttribute('data-fav', 'true');
+      }   
     }
-    else if (!Array.from(card.classList).includes('red')) {
-      removeId(card);
-    }
-    string2 = '';
-    card.addEventListener('click', function () {
-      if (this.classList.contains('red')) {
-        this.classList.remove('red');
-        removeId(this);
-      } else if (!this.classList.contains('red')) {
-        this.classList.add('red');
-        getId(this);
+    if (card.dataset.fav === 'true') {
+      card.classList.add('red');
+      getId(card, 'true');
+
+    } else 
+      if (card.dataset.fav === 'false') {
+        card.classList.remove('red');
+        getId(card, 'false');
       }
-    })
+    }
+  for (let card of cards) {
+    card.addEventListener('click', function () {
+      if (this.dataset.fav === 'false') {
+        this.setAttribute('data-fav', 'true');
+        getId(this, 'true');
+      } else
+        if (this.dataset.fav === 'true') {
+          this.setAttribute('data-fav', 'false');
+          card.classList.remove('red');
+          getId(this, 'false');
+        }
+    })   
   }
 }
-FileSystemDirectoryEntry;jnerg
